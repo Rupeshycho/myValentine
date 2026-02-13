@@ -18,134 +18,148 @@
 .paper {
     background: linear-gradient(to bottom, #ffffff, #fdfdfd);
     box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    transition: transform 2s ease, opacity 2s ease;
+    transition: transform 1s ease, opacity 1s ease;
+    z-index: 50; /* on top of blur */
+}
+
+/* Blur overlay for background when envelope opens */
+.blur-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.1);
+    z-index: 40;
+    display: none;
 }
 </style>
 </head>
 
-<body class="bg-pink-100 flex items-center justify-center min-h-screen">
+<body class="bg-pink-100 flex items-center justify-center min-h-screen overflow-hidden">
 
-<div class="relative flex flex-col items-center">
+<!-- BLUR BACKGROUND -->
+<div id="blurBg" class="blur-bg"></div>
 
-    <!-- PAPER -->
+<div class="relative flex flex-col items-center justify-center w-full h-full">
+
+    <!-- PAPER / LETTER -->
     <div id="paper"
-        class="paper absolute w-80 max-w-[90%] p-6 rounded-lg opacity-0 translate-y-0">
-
+         class="paper absolute w-80 max-w-[90%] p-6 rounded-lg opacity-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div id="content">
-
             <h2 class="text-center text-xl font-semibold mb-6">
                 Will you be my Valentine? 💗
             </h2>
 
             <div class="flex justify-center gap-6 items-center">
-                <button id="yesBtn"
-                    class="bg-green-500 text-white px-6 py-2 rounded-full transition-all duration-300">
+                <button id="yesBtn" class="bg-green-500 text-white px-6 py-2 rounded-full transition-all duration-300">
                     Yes
                 </button>
 
-                <button id="noBtn"
-                    class="bg-red-500 text-white px-6 py-2 rounded-full transition-all duration-300">
+                <button id="noBtn" class="bg-red-500 text-white px-6 py-2 rounded-full transition-all duration-300">
                     No
                 </button>
             </div>
-
         </div>
     </div>
 
-
     <!-- ENVELOPE -->
-    <div id="envelope" class="relative w-80 h-56 cursor-pointer mt-10">
+    <div id="envelope" class="relative w-80 h-56 cursor-pointer mt-10 z-30">
 
         <!-- Back -->
-        <div class="absolute w-full h-full bg-yellow-400 rounded-lg shadow-xl"></div>
+        <div class="absolute inset-0 bg-yellow-400 rounded-lg shadow-xl"></div>
 
         <!-- Flap -->
-        <div id="flap"
-            class="flap absolute w-full h-28 bg-yellow-500 rounded-t-lg">
-        </div>
+        <div id="flap" class="flap absolute w-full h-28 bg-yellow-500 rounded-t-lg"></div>
 
         <!-- Text -->
         <div class="absolute inset-0 flex items-center justify-center">
             <h1 class="text-xl font-bold text-black">
-                Tap to open 💌
+                Tap Gara ta , Miss Neha 💌
             </h1>
         </div>
 
     </div>
-
 </div>
 
 <script>
-
 const envelope = document.getElementById("envelope");
 const flap = document.getElementById("flap");
 const paper = document.getElementById("paper");
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
+const blurBg = document.getElementById("blurBg");
 const content = document.getElementById("content");
 
 let yesScale = 1;
 let noScale = 1;
+let isOpen = false;
 
-// OPEN ENVELOPE
+// OPEN/CLOSE ENVELOPE
 envelope.addEventListener("click", () => {
-
-    // open flap
-    flap.style.transform = "rotateX(180deg)";
-
-    // slide paper out slowly
-    setTimeout(() => {
+    if (!isOpen) {
+        flap.style.transform = "rotateX(180deg)";
+        blurBg.style.display = "block";
         paper.style.opacity = "1";
-        paper.style.transform = "translateY(-220px)";
-    }, 500);
+        paper.style.transform = "translate(-50%, -50%)";
+        isOpen = true;
+    } else {
+        flap.style.transform = "rotateX(0deg)";
+        paper.style.opacity = "0";
+        paper.style.transform = "translate(-50%, -50%) translateY(0px)";
+        blurBg.style.display = "none";
+        isOpen = false;
+    }
 });
-
 
 // NO BUTTON CLICK
-noBtn.addEventListener("click", () => {
+document.addEventListener("click", (e) => {
+    if (e.target.id === "noBtn") {
+        yesScale += 0.3;   // Yes grows 30%
+        noScale -= 0.2;    // No shrinks
+        if (noScale < 0.3) noScale = 0.3;
 
-    yesScale += 0.3;   // 30% bigger
-    noScale -= 0.2;    // 20% smaller
+        document.getElementById("yesBtn").style.transform = `scale(${yesScale})`;
+        document.getElementById("noBtn").style.transform = `scale(${noScale})`;
 
-    if (noScale < 0.3) noScale = 0.3;
-
-    yesBtn.style.transform = `scale(${yesScale})`;
-    noBtn.style.transform = `scale(${noScale})`;
+        // Move No button randomly
+        const randomX = Math.floor(Math.random() * 120) - 60; // ±60px
+        const randomY = Math.floor(Math.random() * 60) - 30;  // ±30px
+        document.getElementById("noBtn").style.transform += ` translate(${randomX}px, ${randomY}px)`;
+    }
 });
-
 
 // YES BUTTON CLICK
-yesBtn.addEventListener("click", () => {
+document.addEventListener("click", (e) => {
+    if (e.target.id === "yesBtn") {
 
-    content.innerHTML = `
-        <h2 class="text-center text-xl font-semibold mb-4">
-            Thanks my sweetheart 💗
-        </h2>
-
-        <p class="text-center mb-6">
-            I will never leave you.<br>
-            I will always love you baby 🫂💗
-        </p>
-
-        <div class="flex justify-center">
-            <button id="finalBtn"
-                class="bg-pink-500 text-white px-6 py-2 rounded-full">
-                I love you too buda 🫂💗🥹
-            </button>
-        </div>
-    `;
-
-    document.getElementById("finalBtn").addEventListener("click", () => {
         content.innerHTML = `
-            <div class="text-center">
-                <img src="image2.png"
-                     class="rounded-lg shadow-lg max-w-full">
+            <h2 class="text-center text-xl font-semibold mb-4 text-pink-500">
+                my madam ji 💖
+            </h2>
+            <p class="text-center text-gray-700 mb-6">
+                Thank you for coming into my life 🥹<br>
+                You make every day brighter! 🌟
+            </p>
+            <div class="flex justify-center">
+                <button id="finalBtn" class="bg-pink-500 text-white px-6 py-2 rounded-full mt-4 hover:bg-pink-600 transition-all duration-300">
+                    I am always yours 💗🫳
+                </button>
             </div>
         `;
-    });
+    }
 
+    if (e.target.id === "finalBtn") {
+        content.innerHTML = `
+            <div class="relative">
+                <img src="image2.png" class="rounded-lg shadow-lg max-w-full" />
+                <h2 class="absolute top-1/3 w-full text-center text-2xl font-extrabold text-brown-500 drop-shadow-lg animate-pulse px-2">
+                    Aww Neha, thank you for being in my life, my forever bestie 💌🫂🫳
+                </h2>
+                <p class="absolute top-1/2 w-full text-center text-lg text-black font-bold drop-shadow-md px-2">
+                    I am always yours, heroine 💗🫳
+                </p>
+            </div>
+        `;
+    }
 });
-
 </script>
 
 </body>
