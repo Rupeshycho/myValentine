@@ -38,6 +38,7 @@ noBtn.addEventListener("click", () => {
 yesBtn.addEventListener("click", () => {
 
     letterContent.innerHTML = `
+    
         <h2 class="text-center text-xl font-semibold mb-4">
             Thanks my sweetheart 💗
         </h2>
@@ -57,6 +58,7 @@ yesBtn.addEventListener("click", () => {
 
     document.getElementById("finalBtn").addEventListener("click", () => {
         letterContent.innerHTML = `
+
             <h2 class="text-center text-3xl font-extrabold text-pink-500 drop-shadow-lg animate-pulse mb-4">
                 Aww thank you 💌🫳
             </h2>

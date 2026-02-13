@@ -3,37 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Valentine 💌</title>
-<link rel="stylesheet" href="stylecs.css">
+<title>My Valentine 💗</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-pink-100 flex items-center justify-center min-h-screen overflow-hidden">
 
-<div class="container">
-
-    <!-- ENVELOPE -->
-    <div class="envelope" id="envelope">
-        <div class="flap" id="flap"></div>
-        <div class="front"></div>
-        <div class="tap-text">Tap to open 💌</div>
+<!-- ENVELOPE -->
+<div id="envelopeContainer" class="relative w-80 h-56 cursor-pointer">
+    <div class="absolute w-full h-full bg-yellow-400 rounded-lg shadow-xl"></div>
+    <div id="flap" class="absolute w-full h-28 bg-yellow-500 origin-top transition-transform duration-700 ease-in-out rounded-t-lg"
+         style="clip-path: polygon(0 0, 100% 0, 50% 100%);"></div>
+    <div class="absolute w-full h-full flex items-center justify-center z-10">
+        <h1 class="text-xl font-bold text-black">Tap to open 💌</h1>
     </div>
+</div>
 
-    <!-- PAPER / LETTER -->
-    <div class="paper" id="paper">
-        <div class="letter-content" id="letterContent">
-            <h2>Thank you for being with me baby 🥹</h2>
-            <p>I promise I will never leave you🫴<br>
-            I will always love you baby 🫂💗</p>
-            <button id="loveBtn">I love you too babu 🫳💗</button>
-        </div>
-    </div>
-
-    <!-- HERO IMAGE -->
-    <div class="hero-image" id="heroImage">
-        <h1>Aww : )</h1>
-        <p>Thank you 💌</p>
-        <img src="image3.png" alt="Love Image">
-    </div>
-
+<!-- LETTER -->
+<div id="letter" class="hidden absolute w-80 max-w-[90%] p-6 rounded-lg shadow-2xl backdrop-blur-md transition-all duration-700">
+    <div id="letterContent"></div>
 </div>
 
 <script src="scriptcs.js"></script>
