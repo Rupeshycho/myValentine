@@ -7,19 +7,22 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+/* Envelope flap triangle */
 .flap {
     clip-path: polygon(0 0, 100% 0, 50% 100%);
     transform-origin: top;
     transition: transform 1s ease-in-out;
 }
 
+/* Paper styling */
 .paper {
     background: linear-gradient(to bottom, #ffffff, #fdfdfd);
     box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     transition: transform 1s ease, opacity 1s ease;
-    z-index: 50;
+    z-index: 50; /* on top of blur */
 }
 
+/* Blur overlay for background when envelope opens */
 .blur-bg {
     position: fixed;
     top: 0; left: 0;
@@ -31,6 +34,7 @@
 }
 </style>
 </head>
+
 <body class="bg-pink-100 flex items-center justify-center min-h-screen overflow-hidden">
 
 <!-- BLUR BACKGROUND -->
@@ -59,19 +63,21 @@
     </div>
 
     <!-- ENVELOPE -->
-    <div id="envelope" class="relative w-80 h-56 mt-10 z-30 cursor-pointer">
+    <div id="envelope" class="relative w-80 h-56 cursor-pointer mt-10 z-30">
+
         <!-- Back -->
-        <div class="absolute inset-0 bg-yellow-400 rounded-lg shadow-xl pointer-events-none"></div>
+        <div class="absolute inset-0 bg-yellow-400 rounded-lg shadow-xl"></div>
 
         <!-- Flap -->
-        <div id="flap" class="flap absolute w-full h-28 bg-yellow-500 rounded-t-lg pointer-events-none"></div>
+        <div id="flap" class="flap absolute w-full h-28 bg-yellow-500 rounded-t-lg"></div>
 
-        <!-- Envelope text -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <h1 class="text-xl font-bold text-black select-none">
-                Tap anywhere 💌
+        <!-- Text -->
+        <div class="absolute inset-0 flex items-center justify-center">
+            <h1 class="text-xl font-bold text-black">
+                Tap Gara ta , Miss Neha💌
             </h1>
         </div>
+
     </div>
 </div>
 
@@ -86,8 +92,8 @@ let yesScale = 1;
 let noScale = 1;
 let isOpen = false;
 
-// Function to open/close envelope
-function toggleEnvelope() {
+// OPEN/CLOSE ENVELOPE
+envelope.addEventListener("click", () => {
     if (!isOpen) {
         flap.style.transform = "rotateX(180deg)";
         blurBg.style.display = "block";
@@ -101,37 +107,29 @@ function toggleEnvelope() {
         blurBg.style.display = "none";
         isOpen = false;
     }
-}
-
-// Listen for both click and touchstart for mobile
-envelope.addEventListener("click", toggleEnvelope);
-envelope.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    toggleEnvelope();
-}, {passive: false});
+});
 
 // NO BUTTON CLICK
 document.addEventListener("click", (e) => {
     if (e.target.id === "noBtn") {
-        yesScale += 0.3;   // Yes grows
+        yesScale += 0.3;   // Yes grows 30%
         noScale -= 0.2;    // No shrinks
         if (noScale < 0.3) noScale = 0.3;
 
-        const yesBtn = document.getElementById("yesBtn");
-        const noBtn = document.getElementById("noBtn");
+        document.getElementById("yesBtn").style.transform = `scale(${yesScale})`;
+        document.getElementById("noBtn").style.transform = `scale(${noScale})`;
 
-        yesBtn.style.transform = `scale(${yesScale})`;
-        noBtn.style.transform = `scale(${noScale})`;
-
-        const randomX = Math.floor(Math.random() * 120) - 60;
-        const randomY = Math.floor(Math.random() * 60) - 30;
-        noBtn.style.transform += ` translate(${randomX}px, ${randomY}px)`;
+        // Move No button randomly
+        const randomX = Math.floor(Math.random() * 120) - 60; // ±60px
+        const randomY = Math.floor(Math.random() * 60) - 30;  // ±30px
+        document.getElementById("noBtn").style.transform += ` translate(${randomX}px, ${randomY}px)`;
     }
 });
 
 // YES BUTTON CLICK
 document.addEventListener("click", (e) => {
     if (e.target.id === "yesBtn") {
+
         content.innerHTML = `
             <h2 class="text-center text-xl font-semibold mb-4 text-pink-500">
                 my madam ji 💖
@@ -155,7 +153,7 @@ document.addEventListener("click", (e) => {
                 <h2 class="absolute top-1/3 w-full text-center text-2xl font-extrabold text-brown-500 drop-shadow-lg animate-pulse px-2">
                     Aww Neha, thank you for being in my life, my forever bestie 💌🫂🫳
                 </h2>
-                <p class="absolute top-3/4 w-full text-center text-lg text-black font-bold drop-shadow-md px-2">
+                <p class="absolute top-1/2 w-full text-center text-lg text-black font-bold drop-shadow-md px-2">
                     I am always yours, heroine 💗🫳
                 </p>
             </div>
