@@ -57,6 +57,10 @@ yesBtn.addEventListener("click", () => {
 
     document.getElementById("finalBtn").addEventListener("click", () => {
         letterContent.innerHTML = `
+            <h2 class="text-center text-3xl font-extrabold text-pink-500 drop-shadow-lg animate-pulse mb-4">
+                Aww thank you 💌🫳
+            </h2>
+
             <div class="text-center">
                 <img src="image1.png" class="rounded-lg shadow-lg max-w-full" />
             </div>

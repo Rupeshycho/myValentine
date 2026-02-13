@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💌</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+/* Envelope flap triangle */
+.flap {
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transition: transform 1s ease-in-out;
+}
+
+/* Paper styling */
+.paper {
+    background: linear-gradient(to bottom, #ffffff, #fdfdfd);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    transition: transform 2s ease, opacity 2s ease;
+}
+</style>
+</head>
+
+<body class="bg-pink-100 flex items-center justify-center min-h-screen">
+
+<div class="relative flex flex-col items-center">
+
+    <!-- PAPER -->
+    <div id="paper"
+        class="paper absolute w-80 max-w-[90%] p-6 rounded-lg opacity-0 translate-y-0">
+
+        <div id="content">
+
+            <h2 class="text-center text-xl font-semibold mb-6">
+                Will you be my Valentine? 💗
+            </h2>
+
+            <div class="flex justify-center gap-6 items-center">
+                <button id="yesBtn"
+                    class="bg-green-500 text-white px-6 py-2 rounded-full transition-all duration-300">
+                    Yes
+                </button>
+
+                <button id="noBtn"
+                    class="bg-red-500 text-white px-6 py-2 rounded-full transition-all duration-300">
+                    No
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ENVELOPE -->
+    <div id="envelope" class="relative w-80 h-56 cursor-pointer mt-10">
+
+        <!-- Back -->
+        <div class="absolute w-full h-full bg-yellow-400 rounded-lg shadow-xl"></div>
+
+        <!-- Flap -->
+        <div id="flap"
+            class="flap absolute w-full h-28 bg-yellow-500 rounded-t-lg">
+        </div>
+
+        <!-- Text -->
+        <div class="absolute inset-0 flex items-center justify-center">
+            <h1 class="text-xl font-bold text-black">
+                Tap to open 💌
+            </h1>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const envelope = document.getElementById("envelope");
+const flap = document.getElementById("flap");
+const paper = document.getElementById("paper");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const content = document.getElementById("content");
+
+let yesScale = 1;
+let noScale = 1;
+
+// OPEN ENVELOPE
+envelope.addEventListener("click", () => {
+
+    // open flap
+    flap.style.transform = "rotateX(180deg)";
+
+    // slide paper out slowly
+    setTimeout(() => {
+        paper.style.opacity = "1";
+        paper.style.transform = "translateY(-220px)";
+    }, 500);
+});
+
+
+// NO BUTTON CLICK
+noBtn.addEventListener("click", () => {
+
+    yesScale += 0.3;   // 30% bigger
+    noScale -= 0.2;    // 20% smaller
+
+    if (noScale < 0.3) noScale = 0.3;
+
+    yesBtn.style.transform = `scale(${yesScale})`;
+    noBtn.style.transform = `scale(${noScale})`;
+});
+
+
+// YES BUTTON CLICK
+yesBtn.addEventListener("click", () => {
+
+    content.innerHTML = `
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Thanks my sweetheart 💗
+        </h2>
+
+        <p class="text-center mb-6">
+            I will never leave you.<br>
+            I will always love you baby 🫂💗
+        </p>
+
+        <div class="flex justify-center">
+            <button id="finalBtn"
+                class="bg-pink-500 text-white px-6 py-2 rounded-full">
+                I love you too buda 🫂💗🥹
+            </button>
+        </div>
+    `;
+
+    document.getElementById("finalBtn").addEventListener("click", () => {
+        content.innerHTML = `
+            <div class="text-center">
+                <img src="image2.png"
+                     class="rounded-lg shadow-lg max-w-full">
+            </div>
+        `;
+    });
+
+});
+
+</script>
+
+</body>
+</html>
