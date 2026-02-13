@@ -69,11 +69,14 @@ function initStep3() {
             <div class="relative">
                 <img src="image3.png" class="rounded-lg shadow-lg max-w-full" />
                 <h2 class="absolute top-1/3 w-full text-center text-3xl font-extrabold text-pink-500 drop-shadow-lg animate-pulse">
-                    Aww thank you 💌🫳
+                    Aww Budu
+                    Thank you 💌🫳
                 </h2>
                 <p class="absolute top-2/3 w-full text-center text-lg text-skyblue drop-shadow-md">
                     Forever and always, my Valentine! 💖
                 </p>
+                
+                
             </div>
         `;
     });
