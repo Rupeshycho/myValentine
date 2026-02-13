@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Valentine 💗</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-pink-100 flex items-center justify-center min-h-screen overflow-hidden">
+
+<!-- ENVELOPE CONTAINER -->
+<div id="envelopeContainer" class="relative w-80 h-56 cursor-pointer">
+
+    <!-- Back of envelope -->
+    <div class="absolute w-full h-full bg-yellow-400 rounded-lg shadow-xl"></div>
+
+    <!-- Flap -->
+    <div id="flap"
+        class="absolute w-full h-28 bg-yellow-500 origin-top transition-transform duration-700 ease-in-out rounded-t-lg"
+        style="clip-path: polygon(0 0, 100% 0, 50% 100%);">
+    </div>
+
+    <!-- Text -->
+    <div class="absolute w-full h-full flex items-center justify-center z-10">
+        <h1 class="text-xl font-bold text-black">Tap to open 💌</h1>
+    </div>
+
+</div>
+
+
+<!-- LETTER -->
+<div id="letter"
+     class="hidden absolute bg-white w-80 max-w-[90%] p-6 rounded-lg shadow-2xl transition-all duration-700">
+
+    <div id="letterContent">
+
+        <h2 class="text-xl font-semibold mb-4 text-center">
+            Will you be my Valentine? 💗
+        </h2>
+
+        <div class="flex justify-center gap-6 mt-6 relative h-20">
+
+            <button id="yesBtn"
+                class="bg-green-500 text-white px-6 py-2 rounded-full transition-all duration-300">
+                Yes
+            </button>
+
+            <button id="noBtn"
+                class="bg-red-500 text-white px-6 py-2 rounded-full absolute">
+                No
+            </button>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+const envelope = document.getElementById("envelopeContainer");
+const flap = document.getElementById("flap");
+const letter = document.getElementById("letter");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const letterContent = document.getElementById("letterContent");
+
+let noClicks = 0;
+
+// OPEN ENVELOPE
+envelope.addEventListener("click", () => {
+
+    flap.style.transform = "rotateX(180deg)";
+    
+    setTimeout(() => {
+        envelope.classList.add("hidden");
+        letter.classList.remove("hidden");
+    }, 600);
+});
+
+
+// NO BUTTON MOVES
+noBtn.addEventListener("click", () => {
+
+    noClicks++;
+
+    const randomX = Math.floor(Math.random() * 200) - 100;
+    const randomY = Math.floor(Math.random() * 100) - 50;
+
+    noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+    yesBtn.style.transform = `scale(${1 + noClicks * 0.2})`;
+});
+
+
+// YES CLICK
+yesBtn.addEventListener("click", () => {
+
+    letterContent.innerHTML = `
+        <h2 class="text-center text-xl font-semibold mb-4">
+            Thanks my sweetheart 💗
+        </h2>
+
+        <p class="text-center mb-4">
+            I will never leave you. <br>
+            I will always love you baby 🫂💗
+        </p>
+
+        <div class="flex justify-center">
+            <button id="finalBtn"
+                class="bg-pink-500 text-white px-6 py-2 rounded-full mt-4">
+                I love you too buda 🫂💗🥹
+            </button>
+        </div>
+    `;
+
+    document.getElementById("finalBtn").addEventListener("click", () => {
+        letterContent.innerHTML = `
+            <div class="text-center">
+                <img src="image.png" class="rounded-lg shadow-lg max-w-full" />
+            </div>
+        `;
+    });
+
+});
+
+</script>
+
+</body>
+</html>
