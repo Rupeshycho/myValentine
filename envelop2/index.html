@@ -105,6 +105,12 @@ button{
     font-weight:bold;
     transition:0.3s;
 }
+.letter button:hover{
+    background-color: darkred;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
 
 .yes{
     background:#2ed573;
@@ -133,10 +139,34 @@ button{
 }
 
 .final img{
-    width:250px;
+    width:200px;
     border-radius:12px;
     margin-top:15px;
 }
+.image-container{
+    position:relative;
+    display:inline-block;
+}
+
+.image-container img{
+    width:300px;
+    border-radius:15px;
+}
+.center-text{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    color:white;
+    text-align:center;
+    font-weight:bold;
+    font-size:20px;
+    text-shadow:2px 2px 8px rgba(27, 25, 25, 0.8);
+    padding:10px;
+}
+
+
+
 </style>
 </head>
 
@@ -162,10 +192,15 @@ button{
 </div>
 
 <div class="final" id="finalScreen">
-    <h2>Aww Thank You Neha.<br>
-    I will meet you soon. 🥹🧑‍🤝‍🧑💝</h2>
-    <img src="image2.png" alt="Hero">
+    <div class="image-container">
+        <img src="image2.png" alt="Hero">
+        <h2 class="center-text">
+            Aww Thank You Neha. <br>
+            I will meet you soon. 🥹🧑‍🤝‍🧑💝
+        </h2>
+    </div>
 </div>
+
 
 <script>
 let yesSize = 16;
