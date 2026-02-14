@@ -4,162 +4,195 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Valentine 💌</title>
-<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-/* Envelope flap triangle */
-.flap {
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    transform-origin: top;
-    transition: transform 1s ease-in-out;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Paper styling */
-.paper {
-    background: linear-gradient(to bottom, #ffffff, #fdfdfd);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    transition: transform 1s ease, opacity 1s ease;
-    z-index: 50; /* on top of blur */
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+    overflow:hidden;
 }
 
-/* Blur overlay for background when envelope opens */
-.blur-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    backdrop-filter: blur(8px);
-    background: rgba(0,0,0,0.1);
-    z-index: 40;
-    display: none;
+/* Envelope */
+.envelope-wrapper{
+    position:relative;
+    text-align:center;
+}
+
+.envelope{
+    width:260px;
+    height:170px;
+    background:#ff6b81;
+    position:relative;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.5s;
+}
+
+.envelope::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#ff4757;
+    clip-path:polygon(0 0,50% 60%,100% 0);
+}
+
+.tap-text{
+    position:absolute;
+    width:100%;
+    bottom:-40px;
+    font-weight:bold;
+    color:#fff;
+    animation:blink 1s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:0.4;}
+}
+
+/* Blur effect */
+.blur{
+    filter:blur(6px);
+}
+
+/* Letter */
+.letter{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    width:300px;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    transition:0.5s;
+    z-index:10;
+}
+
+.letter.show{
+    transform:translate(-50%,-50%) scale(1);
+}
+
+/* Fold line */
+.fold{
+    width:100%;
+    height:2px;
+    background:#ddd;
+    margin:10px 0;
+}
+
+/* Buttons */
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    margin:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.yes{
+    background:#2ed573;
+    color:white;
+    font-size:16px;
+}
+
+.no{
+    background:#ff4757;
+    color:white;
+    font-size:16px;
+}
+
+/* Final Image Screen */
+.final{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    text-align:center;
+    transition:0.5s;
+}
+
+.final.show{
+    transform:translate(-50%,-50%) scale(1);
+}
+
+.final img{
+    width:250px;
+    border-radius:12px;
+    margin-top:15px;
 }
 </style>
 </head>
 
-<body class="bg-pink-100 flex items-center justify-center min-h-screen overflow-hidden">
+<body>
 
-<!-- BLUR BACKGROUND -->
-<div id="blurBg" class="blur-bg"></div>
+<div class="envelope-wrapper">
+    <div class="envelope" onclick="openEnvelope()"></div>
+    <div class="tap-text">Tap to open 👆</div>
+</div>
 
-<div class="relative flex flex-col items-center justify-center w-full h-full">
+<div class="letter" id="letter">
+    <h2>Will you be my Valentine ? 💖</h2>
+    <div class="fold"></div>
+    <button class="yes" id="yesBtn" onclick="yesClick()">Yes 💘</button>
+    <button class="no" id="noBtn" onclick="noClick()">No 😅</button>
+</div>
 
-    <!-- PAPER / LETTER -->
-    <div id="paper"
-         class="paper absolute w-80 max-w-[90%] p-6 rounded-lg opacity-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div id="content">
-            <h2 class="text-center text-xl font-semibold mb-6">
-                Will you be my Valentine? 💗
-            </h2>
+<div class="letter" id="thankYou">
+    <h3>Thank you for being with me all the time.<br>
+    And I also care about you.<br>
+    Always be there for you 💞</h3>
+    <button onclick="finalStep()">Love you too, my Hero 💌🥰</button>
+</div>
 
-            <div class="flex justify-center gap-6 items-center">
-                <button id="yesBtn" class="bg-green-500 text-white px-6 py-2 rounded-full transition-all duration-300">
-                    Yes
-                </button>
-
-                <button id="noBtn" class="bg-red-500 text-white px-6 py-2 rounded-full transition-all duration-300">
-                    No
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ENVELOPE -->
-    <div id="envelope" class="relative w-80 h-56 cursor-pointer mt-10 z-30">
-
-        <!-- Back -->
-        <div class="absolute inset-0 bg-yellow-400 rounded-lg shadow-xl"></div>
-
-        <!-- Flap -->
-        <div id="flap" class="flap absolute w-full h-28 bg-yellow-500 rounded-t-lg"></div>
-
-        <!-- Text -->
-        <div class="absolute inset-0 flex items-center justify-center">
-            <h1 class="text-xl font-bold text-black">
-                Tap Gara ta , Miss Neha💌
-            </h1>
-        </div>
-
-    </div>
+<div class="final" id="finalScreen">
+    <h2>Aww Thank You Neha.<br>
+    I will meet you soon. 🥹🧑‍🤝‍🧑💝</h2>
+    <img src="image.png" alt="Hero">
 </div>
 
 <script>
-const envelope = document.getElementById("envelope");
-const flap = document.getElementById("flap");
-const paper = document.getElementById("paper");
-const blurBg = document.getElementById("blurBg");
-const content = document.getElementById("content");
+let yesSize = 16;
 
-let yesScale = 1;
-let noScale = 1;
-let isOpen = false;
+function openEnvelope(){
+    document.querySelector(".envelope-wrapper").classList.add("blur");
+    document.getElementById("letter").classList.add("show");
+}
 
-// OPEN/CLOSE ENVELOPE
-envelope.addEventListener("click", () => {
-    if (!isOpen) {
-        flap.style.transform = "rotateX(180deg)";
-        blurBg.style.display = "block";
-        paper.style.opacity = "1";
-        paper.style.transform = "translate(-50%, -50%)";
-        isOpen = true;
-    } else {
-        flap.style.transform = "rotateX(0deg)";
-        paper.style.opacity = "0";
-        paper.style.transform = "translate(-50%, -50%) translateY(0px)";
-        blurBg.style.display = "none";
-        isOpen = false;
-    }
-});
+function noClick(){
+    yesSize *= 1.3; // increase 30%
+    document.getElementById("yesBtn").style.fontSize = yesSize + "px";
 
-// NO BUTTON CLICK
-document.addEventListener("click", (e) => {
-    if (e.target.id === "noBtn") {
-        yesScale += 0.3;   // Yes grows 30%
-        noScale -= 0.2;    // No shrinks
-        if (noScale < 0.3) noScale = 0.3;
+    let noBtn = document.getElementById("noBtn");
+    let current = parseFloat(window.getComputedStyle(noBtn).fontSize);
+    noBtn.style.fontSize = (current * 0.7) + "px"; // decrease 30%
+}
 
-        document.getElementById("yesBtn").style.transform = `scale(${yesScale})`;
-        document.getElementById("noBtn").style.transform = `scale(${noScale})`;
+function yesClick(){
+    document.getElementById("letter").classList.remove("show");
+    document.getElementById("thankYou").classList.add("show");
+}
 
-        // Move No button randomly
-        const randomX = Math.floor(Math.random() * 120) - 60; // ±60px
-        const randomY = Math.floor(Math.random() * 60) - 30;  // ±30px
-        document.getElementById("noBtn").style.transform += ` translate(${randomX}px, ${randomY}px)`;
-    }
-});
-
-// YES BUTTON CLICK
-document.addEventListener("click", (e) => {
-    if (e.target.id === "yesBtn") {
-
-        content.innerHTML = `
-            <h2 class="text-center text-xl font-semibold mb-4 text-pink-500">
-                my madam ji 💖
-            </h2>
-            <p class="text-center text-gray-700 mb-6">
-                Thank you for coming into my life 🥹<br>
-                You make every day brighter! 🌟
-            </p>
-            <div class="flex justify-center">
-                <button id="finalBtn" class="bg-pink-500 text-white px-6 py-2 rounded-full mt-4 hover:bg-pink-600 transition-all duration-300">
-                    I am always yours 💗🫳
-                </button>
-            </div>
-        `;
-    }
-
-    if (e.target.id === "finalBtn") {
-        content.innerHTML = `
-            <div class="relative">
-                <img src="image2.png" class="rounded-lg shadow-lg max-w-full" />
-                <h2 class="absolute top-1/3 w-full text-center text-2xl font-extrabold text-brown-500 drop-shadow-lg animate-pulse px-2">
-                    Aww Neha, thank you for being in my life, my forever bestie 💌🫂🫳
-                </h2>
-                <p class="absolute top-1/2 w-full text-center text-lg text-black font-bold drop-shadow-md px-2">
-                    I am always yours, heroine 💗🫳
-                </p>
-            </div>
-        `;
-    }
-});
+function finalStep(){
+    document.getElementById("thankYou").classList.remove("show");
+    document.getElementById("finalScreen").classList.add("show");
+}
 </script>
 
 </body>
